@@ -10,7 +10,11 @@ export default async function ExperiencePage({
 }) {
 	const { experienceId } = await params;
 	// Ensure the user is logged in on whop.
-	const { userId } = await whopsdk.verifyUserToken(await headers());
+	let userId = 'user_dev_123'
+	if (process.env.NODE_ENV !== 'development') {
+		const payload = await whopsdk.verifyUserToken(await headers())
+		userId = payload.userId
+	}
 
 	// Fetch the neccessary data we want from whop.
 	const [experience, user, access] = await Promise.all([

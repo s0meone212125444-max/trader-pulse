@@ -1,31 +1,26 @@
-import { Button } from "@whop/react/components";
-import Link from "next/link";
+  /* biome-ignore lint/nursery/useSortedClasses: <explanation> */
+import { getDailyConfig, getLeaderboard, getUserStatus } from './actions'
+import VotingInterface from './components/VotingInterface'
 
-export default function Page() {
-	return (
-		<div className="py-12 px-4 sm:px-6 lg:px-8">
-			<div className="max-w-2xl mx-auto rounded-3xl bg-gray-a2 p-4 border border-gray-a4">
-				<div className="text-center mt-8 mb-12">
-					<h1 className="text-8 font-bold text-gray-12 mb-4">
-						Welcome to Your Whop App
-					</h1>
-					<p className="text-4 text-gray-10">
-						Learn how to build your application on our docs
-					</p>
-				</div>
+export default async function VotingPage() {
+  const companyId = 'demo-company' // Public voting for the demo company
+  // Mock User ID for public voting demo (In a real app, this would be auth'd or IP-based)
+  // For the purpose of this visual overhaul, we'll assume a consistent user to show the streak.
+  const userId = 'mock-user-123' 
 
-				<div className="justify-center flex w-full">
-					<Link
-						href="https://docs.whop.com/apps"
-						className="w-full"
-						target="_blank"
-					>
-						<Button variant="classic" className="w-full" size="4">
-							Developer Docs
-						</Button>
-					</Link>
-				</div>
-			</div>
-		</div>
-	);
+  const config = await getDailyConfig(companyId)
+  const userStatus = await getUserStatus(userId)
+  const leaderboard = await getLeaderboard(companyId)
+
+  return (
+    <VotingInterface
+      companyId={companyId}
+      question={config.question}
+      optionA={config.option_a}
+      optionB={config.option_b}
+      userStatus={userStatus}
+      userId={userId}
+      leaderboard={leaderboard}
+    />
+  )
 }
